@@ -1,0 +1,9 @@
+name: "My-Website"
+navbar:
+  title: "My Website"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "CLT"
+      href: index.html
+      
