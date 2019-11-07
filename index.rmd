@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ```{undefined echo=FALSE}
 title: "Website1File"
 author: "Marc Carter"
@@ -19,26 +18,5 @@ output: html_document
 
 ![I Love Cats](cat.jpg)
 
-=======
-```{undefined echo=FALSE}
-title: "Website1File"
-author: "Marc Carter"
-date: "11/6/2019"
-output: html_document
----
-```
-#
-#
-#
-#### Originally from Oklahoma
 
-#### I am interested in Travel, and Learning new things.
-
-#### I work at a company called Malin.
-
-## And.....
-
-![I Love Cats](cat.jpg)
-
->>>>>>> bf3ae10005ddb4503972c2ce1c6f642a458b2484
 The other tabs represent my work / analyses that I have completed.  Please have fun checking them out!
