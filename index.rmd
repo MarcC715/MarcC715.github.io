@@ -1,16 +1,15 @@
----
+```{undefined echo=FALSE}
 title: "Website1File"
 author: "Marc Carter"
 date: "11/6/2019"
 output: html_document
 ---
+```
+# Marc Carter
 
-# The Simple yet Awesome Website.
+#### Originally from Oklahoma
 
-## Note: The 6 lines above
+#### I am interested in Travel, and Learning new things.
 
-### Third Heading
+#### I work at a company called Malin.
 
-#### Fourth Heading
-
-Regular Text

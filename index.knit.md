@@ -1,0 +1,16 @@
+---
+title: "Website1File"
+author: "Marc Carter"
+date: "11/6/2019"
+output: html_document
+---
+
+# The Simple yet Awesome Website.
+
+## Note: The 6 lines above
+
+### Third Heading
+
+#### Fourth Heading
+
+Regular Text
