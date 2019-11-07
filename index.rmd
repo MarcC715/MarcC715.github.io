@@ -14,3 +14,8 @@ output: html_document
 
 #### I work at a company called Malin.
 
+## And.....
+
+![I Love Cats](cat.jpg)
+
+The other tabs represent my work / analyses that I have completed.  Please have fun checking them out!
