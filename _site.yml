@@ -5,7 +5,7 @@ navbar:
     - text: "About Me"
       href: index.html
     - text: "Beer Study File"
-      href: budweiserProjectDocument.html     
+      href: BudweiserProjectDocument.html     
     - text: "Beer Presentation"
       href: PresentationFile1.html
     - text: "Links"
