@@ -6,3 +6,5 @@ navbar:
       href: index.html
     - text: "I Love Beer!"
       href: PresentationFile1.html
+    - text: "Links"
+      href: PresentationFile1.html
