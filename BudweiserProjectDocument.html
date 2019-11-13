@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Marc Carter" />
+
+<meta name="date" content="2019-10-25" />
+
+<title>BudweiserProjectDocument</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.9.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-1.46.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-1.46.1/plotly-latest.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Marc Carter</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">About Me</a>
+</li>
+<li>
+  <a href="PresentationFile1.html">Beer Presentation</a>
+</li>
+<li>
+  <a href="links.html">Links</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">BudweiserProjectDocument</h1>
+<h4 class="author">Marc Carter</h4>
+<h4 class="date">10/25/2019</h4>
+
+</div>
+
+
+<div id="breweries-by-state" class="section level2">
+<h2>Breweries By State</h2>
+<p>How many breweries are present in each state?</p>
+<p>Using this bar chart we show the number of breweries in each state from the most breweries to the least per state.</p>
+<p><img src="BudweiserProjectDocument_files/figure-html/unnamed-chunk-1-1.png" width="744" /></p>
+</div>
+<div id="merge-data" class="section level2">
+<h2>Merge Data</h2>
+<p>Merge beer data with the breweries data. Print the first 6 observations and the last six observations to check the merged file.</p>
+<p>Using the head function we show the first six observations and the last six observations.</p>
+<pre><code>##                  Name Beer_ID   ABV IBU Brewery_id
+## 1            Pub Beer    1436 0.050  NA        409
+## 2         Devil&#39;s Cup    2265 0.066  NA        178
+## 3 Rise of the Phoenix    2264 0.071  NA        178
+## 4            Sinister    2263 0.090  NA        178
+## 5       Sex and Candy    2262 0.075  NA        178
+## 6        Black Exodus    2261 0.077  NA        178
+##                            Style Ounces
+## 1            American Pale Lager     12
+## 2        American Pale Ale (APA)     12
+## 3                   American IPA     12
+## 4 American Double / Imperial IPA     12
+## 5                   American IPA     12
+## 6                  Oatmeal Stout     12</code></pre>
+<pre><code>##   Brew_ID                      Name          City State
+## 1       1         NorthGate Brewing   Minneapolis    MN
+## 2       2 Against the Grain Brewery    Louisville    KY
+## 3       3  Jack&#39;s Abby Craft Lagers    Framingham    MA
+## 4       4 Mike Hess Brewing Company     San Diego    CA
+## 5       5   Fort Point Beer Company San Francisco    CA
+## 6       6     COAST Brewing Company    Charleston    SC</code></pre>
+<pre><code>##   Brewery_ID       BreweryName        City State      BeerName Beer_ID
+## 1          1 NorthGate Brewing Minneapolis    MN       Pumpion    2689
+## 2          1 NorthGate Brewing Minneapolis    MN    Stronghold    2688
+## 3          1 NorthGate Brewing Minneapolis    MN   Parapet ESB    2687
+## 4          1 NorthGate Brewing Minneapolis    MN  Get Together    2692
+## 5          1 NorthGate Brewing Minneapolis    MN Maggie&#39;s Leap    2691
+## 6          1 NorthGate Brewing Minneapolis    MN    Wall&#39;s End    2690
+##     ABV IBU                               Style Ounces
+## 1 0.060  38                         Pumpkin Ale     16
+## 2 0.060  25                     American Porter     16
+## 3 0.056  47 Extra Special / Strong Bitter (ESB)     16
+## 4 0.045  50                        American IPA     16
+## 5 0.049  26                  Milk / Sweet Stout     16
+## 6 0.048  19                   English Brown Ale     16</code></pre>
+<pre><code>##      Brewery_ID                   BreweryName          City State
+## 2405        556         Ukiah Brewing Company         Ukiah    CA
+## 2406        557       Butternuts Beer and Ale Garrattsville    NY
+## 2407        557       Butternuts Beer and Ale Garrattsville    NY
+## 2408        557       Butternuts Beer and Ale Garrattsville    NY
+## 2409        557       Butternuts Beer and Ale Garrattsville    NY
+## 2410        558 Sleeping Lady Brewing Company     Anchorage    AK
+##                       BeerName Beer_ID   ABV IBU                   Style
+## 2405             Pilsner Ukiah      98 0.055  NA         German Pilsener
+## 2406         Porkslap Pale Ale      49 0.043  NA American Pale Ale (APA)
+## 2407           Snapperhead IPA      51 0.068  NA            American IPA
+## 2408         Moo Thunder Stout      50 0.049  NA      Milk / Sweet Stout
+## 2409  Heinnieweisse Weissebier      52 0.049  NA              Hefeweizen
+## 2410 Urban Wilderness Pale Ale      30 0.049  NA        English Pale Ale
+##      Ounces
+## 2405     12
+## 2406     12
+## 2407     12
+## 2408     12
+## 2409     12
+## 2410     12</code></pre>
+</div>
+<div id="missing-values" class="section level2">
+<h2>Missing Values</h2>
+<p>Address the missing values in each column</p>
+<p>We filtered the N/A’s out only when we did statistical calculations. We did not remove or delete any data for any other reason.</p>
+</div>
+<div id="mean-abv-and-ibu" class="section level2">
+<h2>Mean ABV and IBU</h2>
+<p>Compute the median alcohol content and international bitterness unit for each state. Plot a bar chart to compare.</p>
+<p>Using the bar chart we were able to display the median ABV and IBU per state using an overlay of the two.</p>
+<div id="htmlwidget-956180c8d3d329f79265" style="width:744px;height:336px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-956180c8d3d329f79265">{"x":{"visdat":{"24c41bf448a4":["function () ","plotlyVisDat"]},"cur_data":"24c41bf448a4","attrs":{"24c41bf448a4":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","VT","WA","WI","WV","WY"],"y":[56,60,52,55,58,60.5,60,62.5,55,57,55,54,55.5,56.5,58,58,50,62.5,52,54,58,51,62,56,52,58,55,57,50,56,55,46,62,60,55,58,60,56,57,55,55,60,57,55,40,56.5,55,55.5,52,62,50],"type":"bar","name":"ABV","text":["Median ABV: 5.6%","Median ABV: 6%","Median ABV: 5.2%","Median ABV: 5.5%","Median ABV: 5.8%","Median ABV: 6.05%","Median ABV: 6%","Median ABV: 6.25%","Median ABV: 5.5%","Median ABV: 5.7%","Median ABV: 5.5%","Median ABV: 5.4%","Median ABV: 5.55%","Median ABV: 5.65%","Median ABV: 5.8%","Median ABV: 5.8%","Median ABV: 5%","Median ABV: 6.25%","Median ABV: 5.2%","Median ABV: 5.4%","Median ABV: 5.8%","Median ABV: 5.1%","Median ABV: 6.2%","Median ABV: 5.6%","Median ABV: 5.2%","Median ABV: 5.8%","Median ABV: 5.5%","Median ABV: 5.7%","Median ABV: 5%","Median ABV: 5.6%","Median ABV: 5.5%","Median ABV: 4.6%","Median ABV: 6.2%","Median ABV: 6%","Median ABV: 5.5%","Median ABV: 5.8%","Median ABV: 6%","Median ABV: 5.6%","Median ABV: 5.7%","Median ABV: 5.5%","Median ABV: 5.5%","Median ABV: 6%","Median ABV: 5.7%","Median ABV: 5.5%","Median ABV: 4%","Median ABV: 5.65%","Median ABV: 5.5%","Median ABV: 5.55%","Median ABV: 5.2%","Median ABV: 6.2%","Median ABV: 5%"],"textposition":"auto","marker":{"color":"#C8102EC8","line":{"color":"#B1B3B3","width":1.5}},"inherit":true},"24c41bf448a4.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","VT","WA","WI","WV","WY"],"y":[46,43,39,20.5,42,40,29,47.5,52,55,55,22.5,26,39,30,33,20,31.5,31.5,35,29,61,35,44.5,24,45,40,33.5,32,35,48.5,34.5,51,41,47,40,35,40,30,24,30,null,37,33,34,42,30,38,19,57.5,21],"type":"bar","name":"IBU","text":["Median IBU: 46","Median IBU: 43","Median IBU: 39","Median IBU: 20.5","Median IBU: 42","Median IBU: 40","Median IBU: 29","Median IBU: 47.5","Median IBU: 52","Median IBU: 55","Median IBU: 55","Median IBU: 22.5","Median IBU: 26","Median IBU: 39","Median IBU: 30","Median IBU: 33","Median IBU: 20","Median IBU: 31.5","Median IBU: 31.5","Median IBU: 35","Median IBU: 29","Median IBU: 61","Median IBU: 35","Median IBU: 44.5","Median IBU: 24","Median IBU: 45","Median IBU: 40","Median IBU: 33.5","Median IBU: 32","Median IBU: 35","Median IBU: 48.5","Median IBU: 34.5","Median IBU: 51","Median IBU: 41","Median IBU: 47","Median IBU: 40","Median IBU: 35","Median IBU: 40","Median IBU: 30","Median IBU: 24","Median IBU: 30","Median IBU: NA","Median IBU: 37","Median IBU: 33","Median IBU: 34","Median IBU: 42","Median IBU: 30","Median IBU: 38","Median IBU: 19","Median IBU: 57.5","Median IBU: 21"],"textposition":"auto","marker":{"color":"#13294B","line":{"color":"#B1B3B3","width":1.5}},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Median ABV (Adjusted) and IBU by State","barmode":"group","xaxis":{"domain":[0,1],"automargin":true,"title":[],"type":"category","categoryorder":"array","categoryarray":["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","VT","WA","WI","WV","WY"]},"yaxis":{"domain":[0,1],"automargin":true,"title":[]},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"x":["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","VT","WA","WI","WV","WY"],"y":[56,60,52,55,58,60.5,60,62.5,55,57,55,54,55.5,56.5,58,58,50,62.5,52,54,58,51,62,56,52,58,55,57,50,56,55,46,62,60,55,58,60,56,57,55,55,60,57,55,40,56.5,55,55.5,52,62,50],"type":"bar","name":"ABV","text":["Median ABV: 5.6%","Median ABV: 6%","Median ABV: 5.2%","Median ABV: 5.5%","Median ABV: 5.8%","Median ABV: 6.05%","Median ABV: 6%","Median ABV: 6.25%","Median ABV: 5.5%","Median ABV: 5.7%","Median ABV: 5.5%","Median ABV: 5.4%","Median ABV: 5.55%","Median ABV: 5.65%","Median ABV: 5.8%","Median ABV: 5.8%","Median ABV: 5%","Median ABV: 6.25%","Median ABV: 5.2%","Median ABV: 5.4%","Median ABV: 5.8%","Median ABV: 5.1%","Median ABV: 6.2%","Median ABV: 5.6%","Median ABV: 5.2%","Median ABV: 5.8%","Median ABV: 5.5%","Median ABV: 5.7%","Median ABV: 5%","Median ABV: 5.6%","Median ABV: 5.5%","Median ABV: 4.6%","Median ABV: 6.2%","Median ABV: 6%","Median ABV: 5.5%","Median ABV: 5.8%","Median ABV: 6%","Median ABV: 5.6%","Median ABV: 5.7%","Median ABV: 5.5%","Median ABV: 5.5%","Median ABV: 6%","Median ABV: 5.7%","Median ABV: 5.5%","Median ABV: 4%","Median ABV: 5.65%","Median ABV: 5.5%","Median ABV: 5.55%","Median ABV: 5.2%","Median ABV: 6.2%","Median ABV: 5%"],"textposition":["auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto"],"marker":{"color":"#C8102EC8","line":{"color":"#B1B3B3","width":1.5}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","TN","TX","UT","VA","VT","WA","WI","WV","WY"],"y":[46,43,39,20.5,42,40,29,47.5,52,55,55,22.5,26,39,30,33,20,31.5,31.5,35,29,61,35,44.5,24,45,40,33.5,32,35,48.5,34.5,51,41,47,40,35,40,30,24,30,37,33,34,42,30,38,19,57.5,21],"type":"bar","name":"IBU","text":["Median IBU: 46","Median IBU: 43","Median IBU: 39","Median IBU: 20.5","Median IBU: 42","Median IBU: 40","Median IBU: 29","Median IBU: 47.5","Median IBU: 52","Median IBU: 55","Median IBU: 55","Median IBU: 22.5","Median IBU: 26","Median IBU: 39","Median IBU: 30","Median IBU: 33","Median IBU: 20","Median IBU: 31.5","Median IBU: 31.5","Median IBU: 35","Median IBU: 29","Median IBU: 61","Median IBU: 35","Median IBU: 44.5","Median IBU: 24","Median IBU: 45","Median IBU: 40","Median IBU: 33.5","Median IBU: 32","Median IBU: 35","Median IBU: 48.5","Median IBU: 34.5","Median IBU: 51","Median IBU: 41","Median IBU: 47","Median IBU: 40","Median IBU: 35","Median IBU: 40","Median IBU: 30","Median IBU: 24","Median IBU: 30","Median IBU: 37","Median IBU: 33","Median IBU: 34","Median IBU: 42","Median IBU: 30","Median IBU: 38","Median IBU: 19","Median IBU: 57.5","Median IBU: 21"],"textposition":["auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto","auto"],"marker":{"color":"#13294B","line":{"color":"#B1B3B3","width":1.5}},"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="state-with-max-abv" class="section level2">
+<h2>State with Max ABV</h2>
+<p>Which state has the maximum ABV beer?</p>
+<p>Colorado has the highest ABV beer with a 12.8% alcohol beer</p>
+<p><img src="BudweiserProjectDocument_files/figure-html/unnamed-chunk-4-1.png" width="744" /></p>
+</div>
+<div id="state-with-highest-ibu" class="section level2">
+<h2>State with Highest IBU</h2>
+<p>Which state has the maximum IBU beer?</p>
+<p>Oregon has the beer with the highest IBU at 138</p>
+<p><img src="BudweiserProjectDocument_files/figure-html/unnamed-chunk-5-1.png" width="744" /></p>
+</div>
+<div id="distribution-of-abv" class="section level2">
+<h2>Distribution of ABV</h2>
+<p>Comment on the summary statistics and distribution of the ABV variable</p>
+<p>It appears the beer sweet spot is around 5.5% ABV as that’s the average mean of all beers in the data set. There are quite a few states that prefer a higher ABV and those typically have a higher number of breweries associated.</p>
+<p><img src="BudweiserProjectDocument_files/figure-html/unnamed-chunk-6-1.png" width="744" /><img src="BudweiserProjectDocument_files/figure-html/unnamed-chunk-6-2.png" width="744" /></p>
+</div>
+<div id="relationship-between-abv-and-ibu" class="section level2">
+<h2>Relationship between ABV and IBU</h2>
+<p>Is there an apparent relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot. Make your best judgement of a relationship and EXPLAIN your answer.</p>
+<p>Yes, using the scatter plot we can see the higher the IBU (the more bitter) the beer the higher the ABV. The judgement can be made that the longer the hops are brewed the more bitter the beer. The end result also brings a higher alcohol content. Alcohol is could also be considered bitter so simply the higher the ABV the more bitter the beer due to the alcohol alone.</p>
+<p><img src="BudweiserProjectDocument_files/figure-html/unnamed-chunk-7-1.png" width="480" /></p>
+</div>
+<div id="relationship-between-ipa-and-other-ales" class="section level2">
+<h2>Relationship between IPA and Other Ale’s</h2>
+<p>Budweiser would also like to investigate the difference with respect to IBU and ABV between IPA’s (Indian Pale Ales) and other types of Ale (any beer with “Ale” in its name other than IPA.) You decide to use KNN clustering to investigate this relationship. Provide statistical evidence one way or the other.</p>
+<p>Using KNN we were able to predict with 83% success rate if a beer was an IPA or not. With IPA having a much higher alcohol content and higher IBU than traditional ale style beers we could predict the style of beer simply based on ABV and IBU.</p>
+<pre><code>##      classifications
+##       IPA ALE
+##   IPA  83  19
+##   ALE  22 161</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##      classifications
+##       IPA ALE
+##   IPA  83  19
+##   ALE  22 161
+##                                           
+##                Accuracy : 0.8561          
+##                  95% CI : (0.8099, 0.8947)
+##     No Information Rate : 0.6316          
+##     P-Value [Acc &gt; NIR] : &lt;2e-16          
+##                                           
+##                   Kappa : 0.689           
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.7548          
+##                                           
+##             Sensitivity : 0.7905          
+##             Specificity : 0.8944          
+##          Pos Pred Value : 0.8137          
+##          Neg Pred Value : 0.8798          
+##              Prevalence : 0.3684          
+##          Detection Rate : 0.2912          
+##    Detection Prevalence : 0.3579          
+##       Balanced Accuracy : 0.8425          
+##                                           
+##        &#39;Positive&#39; Class : IPA             
+## </code></pre>
+<pre><code>##      classifications
+##       IPA ALE
+##   IPA  83  19
+##   ALE  22 161</code></pre>
+<pre><code>## [1] 0.8561404</code></pre>
+<pre><code>## [1] 0.1438596</code></pre>
+<pre><code>## [1] 0.7904762</code></pre>
+<pre><code>## [1] 0.8944444</code></pre>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>Knock their socks off! Find one other useful inference from the data that you feel Budweiser may be able to find value in. you must convince them why it’s important and back up your conviction with appropriate statistical evidence.</p>
+<p>In conclusion we suggest you sell new conceptual products to the states that have the most breweries per capita. Also, you should continue to do a hard push in the states that have the least amount of breweries per capita. Even possibly a new product with a lower ABV as it appears there is a market for a lower ABV product.</p>
+<p>We would like to do more research on this with actual sales data to provide even more confirmation to where they should focus on new and existing products. Possibly partner with our distribution and retail chains for their beer year over year beer sales.</p>
+<p><img src="BudweiserProjectDocument_files/figure-html/unnamed-chunk-9-1.png" width="744" /><img src="BudweiserProjectDocument_files/figure-html/unnamed-chunk-9-2.png" width="744" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

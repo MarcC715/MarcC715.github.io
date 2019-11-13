@@ -1,0 +1,405 @@
+---
+title: "BudweiserProjectDocument"
+author: "Marc Carter"
+date: "10/25/2019"
+output: html_document
+always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load libraries
+
+library(dplyr)
+library(caret)
+library(class)
+library(jsonlite)
+library(ggplot2)
+library(plotly)
+library(ggthemes)
+library(tidyverse)
+library(e1071)
+
+######################################
+##  Read in Files
+######################################
+
+BeerFile <- read.csv("Beers.txt", 
+                     strip.white = TRUE,
+                     header = TRUE)
+BreweriesFile <- read.csv("Breweries.txt", 
+                         strip.white = TRUE,
+                         header = TRUE)
+
+StatesFile <- read.csv("states_lat_long.csv", 
+                       strip.white = TRUE,
+                       header = TRUE)
+
+######################################
+##  Create Color Variables.
+######################################
+
+BudRed = rgb(200,16,46, 200, max = 255)
+BudWhite = rgb(255,255,255, max = 255)
+BudBlue = rgb(19,41,75, max = 255)
+BudSilver = rgb(177,179,179, max = 255)
+BudBlack  = rgb(0,0,0, max = 255)
+
+```
+
+## Breweries By State
+How many breweries are present in each state?
+
+Using this bar chart we show the number of breweries in each state from the most breweries to the least per state.
+
+```{r echo=FALSE, fig.height=3.5, fig.width=7.75, message=FALSE, warning=FALSE}
+######################################
+##  How many Breweries per state?
+######################################
+
+Breweries_By_State <- BreweriesFile %>% count(State)
+names(Breweries_By_State)[2] = "BreweriesCount"  # Rename Column to ensure understanding.
+names(StatesFile)[1] = "State"  # Rename Column to be able to merge the two data sets.
+st <- merge(StatesFile, Breweries_By_State, by=c("State")) # Merge Data Frames by State.
+
+
+# This plot is too messy to show, and we determined the usefull information would 
+# be the top and bottom 10.
+
+ggplot(data = Breweries_By_State, 
+         mapping = aes(x = reorder(State, -BreweriesCount), y = BreweriesCount, fill = BudRed)) +
+  geom_bar(stat = "Identity", show.legend = FALSE, colour = BudSilver) +
+  labs(title="Breweries By State", x="States",y="Count",fill="") +
+  theme(panel.background = element_rect(fill = BudWhite,
+                                        colour = BudBlue,
+                                        size = 0.5, linetype = "solid"),
+        panel.grid.major.y = element_line(size = 0.25, linetype = "solid",
+                                          colour = BudBlue),
+        panel.grid.major.x = element_blank())
+
+```
+
+## Merge Data
+
+Merge beer data with the breweries data. Print the first 6 observations and the last six observations to check the merged file.
+
+Using the head function we show the first six observations and the last six observations.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+head(BeerFile)
+head(BreweriesFile)
+
+# Change the BreweriesFile "Brew_ID" column header to "Brewery_ID" to merge.
+names(BeerFile)[1] <- "BeerName"
+names(BeerFile)[5] <- "Brewery_ID"
+names(BreweriesFile)[1] <- "Brewery_ID"
+names(BreweriesFile)[2] <- "BreweryName"
+
+BeersData <- merge(BreweriesFile,BeerFile, by=c("Brewery_ID"))
+
+head(BeersData)
+tail(BeersData)
+```
+
+## Missing Values
+Address the missing values in each column
+
+We filtered the N/A’s out only when we did statistical calculations. We did not remove or delete any data for any other reason.
+
+
+## Mean ABV and IBU
+Compute the median alcohol content and international bitterness unit for each state. Plot a bar chart to compare.
+
+Using the bar chart we were able to display the median ABV and IBU per state using an overlay of the two.
+
+```{r echo=FALSE, fig.height=3.5, fig.width=7.75, message=FALSE, warning=FALSE}
+######################################
+##  Calculate the statistics of Alcohol By Volume (ABV) & International Bitterness Units (IBU).
+######################################
+
+BeersByState <- group_by(BeersData, State)
+
+BeerStatsByState <- summarise(BeersByState,
+                       abv_mean = mean(ABV, na.rm = TRUE),
+                       abv_sd = sd(ABV, na.rm = TRUE),
+                       abv_med = median(ABV, na.rm = TRUE),
+                       abv_min = min(ABV, na.rm = TRUE),
+                       abv_max = max(ABV, na.rm = TRUE),
+                       ibu_mean = mean(IBU, na.rm = TRUE),
+                       ibu_sd = sd(IBU, na.rm = TRUE),
+                       ibu_med = median(IBU, na.rm = TRUE),
+                       ibu_min = min(IBU, na.rm = TRUE),
+                       ibu_max = max(IBU, na.rm = TRUE),
+                       rec_cnt = n())
+
+ABVStats <- summarise(BeersData,
+                      mean_abv = mean(ABV, na.rm = TRUE),
+                      med_abv = median(ABV, na.rm = TRUE),
+                      max_abv = max(ABV, na.rm = TRUE),
+                      min_abv = min(ABV, na.rm = TRUE),
+                      range_abv = max(ABV, na.rm = TRUE) - min(ABV, na.rm = TRUE))
+
+
+######################################
+##  Median ABV and IBU by State in Bar Graph
+#####################################
+
+barp <- BeerStatsByState %>% plot_ly() %>%
+  add_trace(x = BeerStatsByState$State, y = BeerStatsByState$abv_med * 1000, type = 'bar',
+            name = "ABV",
+            text = paste0("Median ABV: ",round(BeerStatsByState$abv_med * 100,2),"%"),
+            textposition = 'auto',
+            marker = list(color = BudRed, line = list(color = BudSilver, width = 1.5))) %>%
+  add_trace(x = BeerStatsByState$State, y = BeerStatsByState$ibu_med, type = 'bar',
+            name = "IBU",
+            text = paste0("Median IBU: ",BeerStatsByState$ibu_med),
+            textposition = 'auto',
+            marker = list(color = BudBlue, line = list(color = BudSilver, width = 1.5))) %>%
+  layout(title = "Median ABV (Adjusted) and IBU by State",
+         barmode = 'group')
+barp
+
+```
+
+## State with Max ABV 
+
+Which state has the maximum ABV beer?
+
+Colorado has the highest ABV beer with a 12.8% alcohol beer
+
+```{r echo=FALSE, fig.height=3.5, fig.width=7.75, message=FALSE, warning=FALSE}
+######################################
+##  State with the highest ABV Beer 
+#####################################
+
+Top10ABV <- top_n(BeerStatsByState, 10, BeerStatsByState$abv_max)
+Top10ABVOrdered <- Top10ABV[order(-Top10ABV$abv_max),]
+
+ggplot(data = Top10ABVOrdered, 
+       mapping = aes(x = reorder(State, -abv_max), y = abv_max, fill = BudRed)) +
+  geom_bar(stat = "Identity", show.legend = FALSE, colour = BudSilver) +
+  geom_text(aes(label=paste0(round(abv_max*100,2),"%")), vjust = 1.25, color = BudWhite, size = 3) +
+  labs(title="Higest Alcohol by Volume by State", x="States",y="ABV",fill="") +
+  scale_y_continuous(labels = scales::percent_format(accurac = 1)) +
+  theme(panel.background = element_rect(fill = BudWhite,
+                                        colour = BudBlue,
+                                        size = 0.5, linetype = "solid"),
+        panel.grid.major.y = element_line(size = 0.25, linetype = "solid",
+                                          colour = BudBlue),
+        panel.grid.major.x = element_blank())
+
+```
+
+
+## State with Highest IBU
+
+Which state has the maximum IBU beer?
+
+Oregon has the beer with the highest IBU at 138
+
+```{r echo=FALSE, fig.height=3.5, fig.width=7.75, message=FALSE, warning=FALSE}
+######################################
+##  State with the most bitter Beer.
+#####################################
+
+Top10IBU <- top_n(BeerStatsByState, 10, BeerStatsByState$ibu_max)
+Top10IBUOrdered <- Top10IBU[order(-Top10IBU$ibu_max),]
+
+ggplot(data = Top10IBUOrdered, 
+       mapping = aes(x = reorder(State, -ibu_max), y = ibu_max, fill = BudRed)) +
+  geom_bar(stat = "Identity", show.legend = FALSE, colour = BudSilver) +
+  geom_text(aes(label=ibu_max), vjust = 1.25, color = BudWhite) +
+  labs(title="Most Bitter Beers by State", x="States",y="IBU",fill="") +
+  theme(panel.background = element_rect(fill = BudWhite,
+                                        colour = BudBlue,
+                                        size = 0.5, linetype = "solid"),
+        panel.grid.major.y = element_line(size = 0.25, linetype = "solid",
+                                          colour = BudBlue),
+        panel.grid.major.x = element_blank())
+```
+
+
+## Distribution of ABV
+
+Comment on the summary statistics and distribution of the ABV variable
+
+It appears the beer sweet spot is around 5.5% ABV as that’s the average mean of all beers in the data set. There are quite a few states that prefer a higher ABV and those typically have a higher number of breweries associated.
+
+```{r echo=FALSE, fig.height=3.5, fig.width=7.75, message=FALSE, warning=FALSE}
+######################################
+##  Distribution of ABV
+#####################################
+# Histogram of ABV
+h1 <- ggplot(BeersData, aes(x = ABV)) +
+  geom_histogram(color = BudRed, fill = BudSilver, binwidth = 0.01) +
+  labs(title = "Histogram", x = "ABV", y = "Count") +
+  scale_x_continuous(labels = scales::percent_format(accurac = 1))
+h1
+
+
+bp <- ggplot(BeersData, aes(y = ABV)) +
+  geom_boxplot(color = BudRed, fill = BudSilver) +
+  labs(title="Alcohol by Volume Distrabution Statistics", x="",y="ABV",fill="") +
+  geom_text(data = ABVStats, aes(x = 0, y = ABVStats$mean_abv, 
+                                 label = paste0("Mean: ",round(ABVStats$mean_abv*100,2),"%"))) +
+  geom_text(data = ABVStats, aes(x = 0, y = ABVStats$med_abv,
+                                 label = paste0("Median: ",round(ABVStats$med_abv*100,2),"%")), vjust = 1.25) +
+  geom_text(data = ABVStats, aes(x = 0, y = ABVStats$min_abv,
+                                 label = paste0("Min: ",round(ABVStats$min_abv*100,2),"%")), vjust = 1.5) +
+  geom_text(data = ABVStats, aes(x = 0, y = ABVStats$max_abv,
+                                 label = paste0("Max: ",round(ABVStats$max_abv*100,2),"%")), vjust = -0.5) +
+  scale_y_continuous(labels = scales::percent_format(accurac = 1.1)) +
+  theme(panel.background = element_rect(fill = BudWhite,
+                                        colour = BudBlue,
+                                        size = 0.5, linetype = "solid"),
+        panel.grid.major.y = element_line(size = 0.25, linetype = "solid",
+                                          colour = BudBlack),
+        panel.grid.major.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()) 
+bp
+
+```
+
+## Relationship between ABV and IBU
+Is there an apparent relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot. Make your best judgement of a relationship and EXPLAIN your answer.
+
+Yes, using the scatter plot we can see the higher the IBU (the more bitter) the beer the higher the ABV. The judgement can be made that the longer the hops are brewed the more bitter the beer.  The end result also brings a higher alcohol content.  Alcohol is could also be considered bitter so simply the higher the ABV the more bitter the beer due to the alcohol alone.
+
+```{r echo=FALSE, fig.height=5, fig.width=5, message=FALSE, warning=FALSE}
+
+ggplot(BeersData, mapping = aes(x = BeersData$ABV, y = BeersData$IBU)) + 
+  geom_point() +
+  geom_smooth(method = lm) +
+  labs(title = "Relationship between Alcohol Content & Bitterness", x = "Alcohol Content", y = "Bitterness") +
+  scale_x_continuous(labels = scales::percent_format(accurac = 1))
+  
+```
+
+
+## Relationship between IPA and Other Ale's
+
+Budweiser would also like to investigate the difference with respect to IBU and ABV between IPA’s (Indian Pale Ales) and other types of Ale (any beer with “Ale” in its name other than IPA.) You decide to use KNN clustering to investigate this relationship. Provide statistical evidence one way or the other.
+
+Using KNN we were able to predict with 83% success rate if a beer was an IPA or not. With IPA having a much higher alcohol content and higher IBU than traditional ale style beers we could predict the style of beer simply based on ABV and IBU.
+
+```{r echo=FALSE, fig.height=3.5, fig.width=7.75, message=FALSE, warning=FALSE}
+######################################
+##  Analysis of "Ales" specifically "India Pale Ales" vs all other Ales.
+#####################################
+
+# Carve out IPA's into a new data set.
+IPAs <- BeersData %>% filter(str_detect(BeersData$Style, "[:alpha:]*IPA[:alpha:]*"))
+
+# Carve out Ale's into a new data set.
+ALEs_temp <- BeersData %>% filter(str_detect(BeersData$Style, "[:alpha:]*Ale[:alpha:]*"))
+
+# Finally make sure all IPA's are removed from the Ale's data set.
+ALEs <- ALEs_temp %>% filter(str_detect(ALEs_temp$Style, "[^IPA]"))
+
+# Add a factor variable for determining variable.
+IPAs$Type = as.factor("IPA")
+ALEs$Type = as.factor("ALE")
+
+# Combine back into a single Data set.
+AllAles = merge.data.frame(IPAs, ALEs, all = TRUE)
+
+# Remove all rows with blanks for IBU or ABV.
+
+AllAlesClean <- filter(AllAles, !is.na(AllAles$ABV) & !is.na(AllAles$IBU))
+
+# Spit Data set into a training Data set and a testing dataset. @ 70/30
+sp = 0.70  # Split percentage
+
+TrainingRows = sample(1:dim(AllAlesClean)[1],round(sp * dim(AllAlesClean)[1])) # Calculate Training Rows
+ales_train = AllAlesClean[TrainingRows,]  # Split into 2 seperate data frames. Include Training Rows
+ales_test = AllAlesClean[-TrainingRows,]  # Exclude Training Rows (Testing Rows)
+
+# KNN Test
+ales_test$TypeClalc =  knn(ales_train[,c(7,8)], ales_test[,c(7,8)],
+                           ales_train$Type, k=5, prob = TRUE)
+
+# classifications
+
+classifications = knn(ales_train[,c(7,8)], ales_test[,c(7,8)],
+                      ales_train$Type, k=5, prob = TRUE)
+
+
+table(ales_test$Type, classifications)
+cm = confusionMatrix(table(ales_test$Type, classifications))
+
+AccValue = ((cm$table[1,1] + cm$table[2,2])) / ((cm$table[1,1] + cm$table[1,2]) + 
+                                                  (cm$table[2,1] + cm$table[2,2]))
+
+MisClassValue = ((cm$table[1,2] + cm$table[2,1])) / ((cm$table[1,1] + cm$table[1,2]) + 
+                                                       (cm$table[2,1] + cm$table[2,2]))
+
+SensitivityValue = cm$table[1,1] / (cm$table[1,1] + cm$table[2,1])
+SpecifictityValue = cm$table[2,2] / (cm$table[1,2] + cm$table[2,2])
+
+cm
+table(ales_test$Type, classifications)
+AccValue
+MisClassValue
+SensitivityValue
+SpecifictityValue
+```
+
+
+## Conclusion
+
+Knock their socks off! Find one other useful inference from the data that you feel Budweiser may be able to find value in. you must convince them why it’s important and back up your conviction with appropriate statistical evidence.
+
+In conclusion we suggest you sell new conceptual products to the states that have the most breweries per capita. Also, you should continue to do a hard push in the states that have the least amount of breweries per capita. Even possibly a new product with a lower ABV as it appears there is a market for a lower ABV product.
+
+We would like to do more research on this with actual sales data to provide even more confirmation to where they should focus on new and existing products. Possibly partner with our distribution and retail chains for their beer year over year beer sales.
+
+```{r echo=FALSE, fig.height=3.5, fig.width=7.75, message=FALSE, warning=FALSE}
+###################
+## Breweries per 1 Million Capa
+###################
+
+st$Breweries_per_Mill = (st$BreweriesCount / (st$Over21Pop/1000000))
+
+Top10 <- top_n(st, 10, st$Breweries_per_Mill)  # Gets the Top 10 Breweries per Capa
+
+Bottom10 <- top_n(st, -10, st$Breweries_per_Mill) # Gets the bottom 10 Breweries per Capa
+
+ggplot(Top10, mapping = aes(x = reorder(State,-Breweries_per_Mill), y = Breweries_per_Mill, fill = BudRed)) +
+  geom_bar(stat = "Identity", show.legend = FALSE, colour = BudSilver) +
+  geom_text(aes(label=round(Breweries_per_Mill,2)), vjust = 1.25, color = BudWhite) +
+  labs(title="Top 10 Breweries Per 1 Mill Capa", x="States",y="Breweries Per Million Capa",fill="") +
+  
+  theme(panel.background = element_rect(fill = BudWhite,
+                                        colour = BudBlue,
+                                        size = 0.5, linetype = "solid"),
+        panel.grid.major.y = element_line(size = 0.25, linetype = "solid",
+                                          colour = BudBlue),
+        panel.grid.major.x = element_blank())
+
+
+ggplot(Bottom10, mapping = aes(x = reorder(State,-Breweries_per_Mill), y = Breweries_per_Mill, fill = BudRed)) +
+  geom_bar(stat = "Identity", show.legend = FALSE, colour = BudSilver) +
+  geom_text(aes(label=round(Breweries_per_Mill,2)), vjust = 1.25, color = BudWhite) +
+  labs(title="Bottom 10 Breweries Per 1 Mill Capa", x="States",y="Breweries Per Million Capa",fill="") +
+  
+  theme(panel.background = element_rect(fill = BudWhite,
+                                        colour = BudBlue,
+                                        size = 0.5, linetype = "solid"),
+        panel.grid.major.y = element_line(size = 0.25, linetype = "solid",
+                                          colour = BudBlue),
+        panel.grid.major.x = element_blank())
+
+```
+
+
+
+
+
+
+
+
+
+
+

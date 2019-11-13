@@ -4,7 +4,9 @@ navbar:
   left:
     - text: "About Me"
       href: index.html
-    - text: "I Love Beer!"
+    - text: "Beer Study File"
+      href: budweiserProjectDocument.html     
+    - text: "Beer Presentation"
       href: PresentationFile1.html
     - text: "Links"
       href: links.html
