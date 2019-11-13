@@ -1,0 +1,12 @@
+name: Try2Website
+title: Try2Website
+username:
+account: mccschool
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1462661
+bundleId: 2584689
+url: https://mccschool.shinyapps.io/Try2Website/
+when: 1573603502.4831
+asMultiple: FALSE
+asStatic: FALSE

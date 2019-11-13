@@ -1,0 +1,12 @@
+name: HaveSomeBeerOnMe
+title: HaveSomeBeerOnMe
+username:
+account: mccschool
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1462714
+bundleId: 2584710
+url: https://mccschool.shinyapps.io/HaveSomeBeerOnMe/
+when: 1573604114.47181
+asMultiple: FALSE
+asStatic: FALSE

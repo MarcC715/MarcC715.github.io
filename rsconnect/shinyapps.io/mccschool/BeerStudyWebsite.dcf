@@ -1,0 +1,12 @@
+name: BeerStudyWebsite
+title: BeerStudyWebsite
+username:
+account: mccschool
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1462580
+bundleId: 2584633
+url: https://mccschool.shinyapps.io/BeerStudyWebsite/
+when: 1573602459.82516
+asMultiple: FALSE
+asStatic: FALSE
